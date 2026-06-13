@@ -11,9 +11,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* ── Layout ── */
 .app{display:flex;flex-direction:column;min-height:100vh;max-width:480px;margin:0 auto;background:#fff}
-.tab-bar{display:flex;border-bottom:1px solid #e8e8e8;background:#fff;position:sticky;top:0;z-index:200}
-.tab{flex:1;padding:12px 0;text-align:center;font-size:13px;color:#888;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;user-select:none}
-.tab.active{color:#06C755;border-bottom-color:#06C755;font-weight:700}
+
+/* ── Tab bar: iOS segmented control style ── */
+.tab-bar{display:flex;padding:6px 10px;gap:4px;background:#ebebeb;position:sticky;top:0;z-index:200}
+.tab{flex:1;padding:9px 0;text-align:center;font-size:13px;color:#888;cursor:pointer;border-radius:9px;transition:all .2s;user-select:none;background:transparent}
+.tab.active{color:#333;background:#fff;font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+
 .page{display:none;padding:14px 14px 8px;overflow-y:auto}
 .page.active{display:block}
 .sec-label{font-size:11px;font-weight:700;color:#aaa;letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px}
@@ -47,7 +50,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .color-swatch{aspect-ratio:1;border-radius:12px;cursor:pointer;border:2.5px solid transparent;position:relative;transition:transform .1s,border-color .15s;overflow:hidden}
 .color-swatch.active{border-color:#06C755;transform:scale(1.07)}
 .color-swatch:active{transform:scale(.93)}
-.color-swatch.palette-swatch{display:flex;align-items:center;justify-content:center;background:conic-gradient(red,yellow,lime,aqua,blue,magenta,red);font-size:22px}
+.color-swatch.palette-swatch{display:flex;align-items:center;justify-content:center;background:conic-gradient(red,yellow,lime,aqua,blue,magenta,red)}
 .color-swatch.palette-swatch input[type=color]{position:absolute;width:100%;height:100%;opacity:0;cursor:pointer}
 .upload-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fafafa;border-radius:10px;border:1px solid #efefef;cursor:pointer;margin-bottom:12px}
 .upload-row span{font-size:13px;color:#555}
@@ -70,8 +73,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* ── Calendar wrap (exported area) ── */
 .calendar-wrap{border-radius:14px;overflow:hidden;position:relative;margin-bottom:12px}
-.cal-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;transition:background .3s}
-.cal-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;transition:background .3s}
+.cal-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
+.cal-overlay{position:absolute;inset:0;z-index:1;pointer-events:none}
 .cal-inner{position:relative;z-index:2;padding:20px 16px 24px}
 .cal-export-title{text-align:center;font-size:18px;font-weight:700;color:#222;min-height:24px;padding-bottom:4px;word-break:break-all}
 .cal-export-month{text-align:center;font-size:13px;color:#555;margin-bottom:10px;font-weight:600}
@@ -91,10 +94,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:#555}
 .legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 
-/* ── Description (editable inline, inside export area) ── */
-.desc-export{display:block;border-top:1px solid transparent;margin-top:8px;padding:4px 2px 2px;font-size:18px;color:#444;line-height:1.6;white-space:pre-wrap;word-break:break-all;outline:none;min-height:28px;cursor:text}
-.desc-export:empty::before{content:attr(data-placeholder);color:#bbb;pointer-events:none}
-.desc-export:focus{border-top-color:rgba(0,0,0,.08)}
+/* ── Description inside export area ── */
+.desc-export{display:none;border-top:1px solid rgba(0,0,0,.08);margin-top:10px;padding:8px 2px 2px;font-size:12px;color:#444;line-height:1.7;white-space:pre-wrap;word-break:break-all;outline:none;cursor:text}
+.desc-export.visible{display:block}
+
+/* ── "+ 備註" button (outside export area) ── */
+.desc-add-wrap{padding:0 0 10px}
+.desc-add-btn{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:#bbb;cursor:pointer;padding:4px 2px;user-select:none}
+.desc-add-btn:active{color:#888}
 
 /* ── Action buttons ── */
 .action-row{display:flex;gap:10px;padding:4px 14px 20px}
@@ -103,7 +110,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .action-btn.primary{background:#06C755;border-color:#06C755;color:#fff}
 .action-btn.primary:active{background:#05a847}
 
-/* ── Sheets ── */
+/* ── Shift picker sheet ── */
 .sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;display:none}
 .sheet-overlay.open{display:block}
 .sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;z-index:501;transition:transform .3s cubic-bezier(.32,.72,0,1);max-height:75vh;overflow-y:auto}
@@ -118,11 +125,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sheet-clear{display:flex;align-items:center;gap:12px;padding:13px 20px;cursor:pointer;color:#e05555;font-size:15px}
 .sheet-clear:active{background:#fff5f5}
 .sheet-divider{height:1px;background:#f2f2f2;margin:0 20px}
-.share-option{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer}
-.share-option:active{background:#f5f5f5}
-.share-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0}
-.share-info p{font-size:15px;font-weight:600;color:#222}
-.share-info span{font-size:12px;color:#aaa}
 
 /* ── Toast & Loading ── */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 22px;border-radius:22px;font-size:13px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
@@ -137,23 +139,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <body>
 <div class="app">
 
-  <!-- Tab bar (no emoji) -->
+  <!-- Tab bar -->
   <div class="tab-bar">
     <div class="tab active" data-tab="calendar" onclick="switchTab('calendar')">班表</div>
     <div class="tab" data-tab="shifts" onclick="switchTab('shifts')">班別</div>
     <div class="tab" data-tab="background" onclick="switchTab('background')">背景</div>
   </div>
 
-  <!-- ══════════════════ Tab: Calendar ══════════════════ -->
+  <!-- ══ Tab: Calendar ══ -->
   <div class="page active" id="tab-calendar">
     <input class="cal-title-input" id="calTitleInput" type="text"
       placeholder="點此輸入班表標題（可選）" maxlength="20"
       oninput="onTitleInput(this.value)">
 
     <div class="month-nav">
-      <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+      <button class="nav-btn" onclick="changeMonth(-1)">&#8249;</button>
       <div class="month-label" id="monthLabel"></div>
-      <button class="nav-btn" onclick="changeMonth(1)">›</button>
+      <button class="nav-btn" onclick="changeMonth(1)">&#8250;</button>
     </div>
 
     <!-- Exported area -->
@@ -165,29 +167,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="cal-export-month" id="calExportMonth"></div>
         <div class="cal-grid" id="calGrid"></div>
         <div class="legend" id="legend"></div>
-        <!-- Description: editable inline inside export -->
+        <!-- Description inside export, hidden when empty -->
         <div class="desc-export" id="descExport"
           contenteditable="true"
-          data-placeholder="輸入備註文字（可選）"
-          oninput="onDescInput(this)"></div>
+          oninput="onDescInput(this)"
+          onblur="onDescBlur(this)"></div>
       </div>
+    </div>
+
+    <!-- Add note button, shown when description is empty -->
+    <div class="desc-add-wrap">
+      <div class="desc-add-btn" id="descAddBtn" onclick="showDesc()">+ 新增備註</div>
     </div>
   </div>
 
-  <!-- Action buttons: only shown on calendar tab -->
+  <!-- Action buttons: calendar tab only -->
   <div class="action-row" id="actionRow">
-    <button class="action-btn" onclick="downloadImg()">↓ 下載圖片</button>
-    <button class="action-btn primary" onclick="openShare()">分享</button>
+    <button class="action-btn" onclick="downloadImg()">&#8595; 下載圖片</button>
+    <button class="action-btn primary" onclick="shareImg()">分享至 LINE</button>
   </div>
 
-  <!-- ══════════════════ Tab: Shifts ══════════════════ -->
+  <!-- ══ Tab: Shifts ══ -->
   <div class="page" id="tab-shifts">
     <div class="sec-label">班別設定</div>
     <div id="shiftList"></div>
-    <button class="add-btn" onclick="addShift()">＋ 新增班別</button>
+    <button class="add-btn" onclick="addShift()">+ 新增班別</button>
   </div>
 
-  <!-- ══════════════════ Tab: Background ══════════════════ -->
+  <!-- ══ Tab: Background ══ -->
   <div class="page" id="tab-background">
     <div class="sec-label">選擇背景色彩</div>
     <div class="color-swatch-grid" id="colorSwatchGrid"></div>
@@ -212,34 +219,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 </div>
 
-<!-- ══ Shift picker sheet ══ -->
+<!-- Shift picker sheet -->
 <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
 <div class="sheet" id="pickerSheet">
   <div class="sheet-handle"></div>
   <div class="sheet-title">選擇班別</div>
   <div id="sheetItems"></div>
-</div>
-
-<!-- ══ Share sheet ══ -->
-<div class="sheet-overlay" id="shareOverlay" onclick="closeShareSheet()"></div>
-<div class="sheet" id="shareSheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-title">分享班表</div>
-  <div class="share-option" onclick="shareTo('native')">
-    <div class="share-icon" style="background:#06C755;color:#fff;font-size:14px">LINE</div>
-    <div class="share-info"><p>分享至 LINE</p><span>傳送給好友或群組</span></div>
-  </div>
-  <div class="sheet-divider"></div>
-  <div class="share-option" onclick="shareTo('copy')">
-    <div class="share-icon" style="background:#f0f0f0;color:#555;font-size:22px">📋</div>
-    <div class="share-info"><p>複製圖片</p><span>複製到剪貼簿</span></div>
-  </div>
-  <div class="sheet-divider"></div>
-  <div class="share-option" onclick="shareTo('email')">
-    <div class="share-icon" style="background:#e8f0fe;color:#185EA5;font-size:20px">✉️</div>
-    <div class="share-info"><p>Email</p><span>以郵件傳送</span></div>
-  </div>
-  <div style="height:24px"></div>
 </div>
 
 <div class="loading" id="loading">
@@ -249,21 +234,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="toast" id="toast"></div>
 
 <script>
-/* ═══════════════════ Config ═══════════════════ */
+/* ═══ Config ═══ */
 const LIFF_ID = '2010387352-Pctemfzt';
 
-/* ═══════════════════ Preset bg colors ═══════════════════ */
+/* ═══ Preset bg colors (light blue first = default) ═══ */
 const PRESET_COLORS = [
-  '#FFFFFF','#F0F4FF','#E8F8F5','#FFF8E1',
-  '#FDEDEC','#F4ECF7','#E3F2FD','#F1F8E9',
+  '#E3F2FD','#FFFFFF','#F0F4FF','#E8F8F5',
+  '#FFF8E1','#FDEDEC','#F4ECF7','#F1F8E9',
   '#FCE4EC','#FFF3E0','#263238','#1A1A2E',
 ];
 
-/* ═══════════════════ LocalStorage helpers ═══════════════════ */
+/* ═══ LocalStorage helpers ═══ */
 const LS = {
   get(k, def) {
-    try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : def; }
-    catch { return def; }
+    try { var v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : def; }
+    catch(e) { return def; }
   },
   set(k, v) {
     try { localStorage.setItem(k, JSON.stringify(v)); }
@@ -271,8 +256,8 @@ const LS = {
   },
 };
 
-/* ═══════════════════ Default shifts ═══════════════════ */
-const DEFAULT_SHIFTS = [
+/* ═══ Default shifts ═══ */
+var DEFAULT_SHIFTS = [
   { id:0, name:'早班',     color:'#4CAF8C', timeStart:'08:00', timeEnd:'16:00', showTime:true  },
   { id:1, name:'中班',     color:'#F4A52A', timeStart:'12:00', timeEnd:'20:00', showTime:true  },
   { id:2, name:'晚班',     color:'#6B7FD4', timeStart:'16:00', timeEnd:'00:00', showTime:true  },
@@ -283,175 +268,173 @@ const DEFAULT_SHIFTS = [
   { id:7, name:'休假',     color:'#9E9E9E', timeStart:'',      timeEnd:'',      showTime:false },
 ];
 
-/* ═══════════════════ Global state ═══════════════════ */
-let shifts    = LS.get('smk_shifts', null) || DEFAULT_SHIFTS.map(s => ({...s}));
-let idCounter = shifts.length > 0 ? Math.max(...shifts.map(s => s.id)) + 1 : 8;
-let calTitle  = LS.get('smk_title', '');
-let curYear, curMonth;
-let schedule  = {}; // current month's schedule (in-memory)
+/* ═══ Global state ═══ */
+var shifts    = LS.get('smk_shifts', null) || DEFAULT_SHIFTS.map(function(s){ return Object.assign({},s); });
+var idCounter = shifts.length > 0 ? Math.max.apply(null, shifts.map(function(s){ return s.id; })) + 1 : 8;
+var calTitle  = LS.get('smk_title', '');
+var curYear, curMonth;
+var schedule  = {};
+var bgTab     = { type:'color', color:'#E3F2FD', customUrl:null, opacity:0 };
 
-// Background tab preview state (may be unsaved)
-let bgTab = { type:'color', color:'#FFFFFF', customUrl:null, opacity:0 };
-
-/* ═══════════════════ Per-month data helpers ═══════════════════ */
+/* ═══ Per-month data ═══ */
 function monthKey() {
-  return `${curYear}-${String(curMonth + 1).padStart(2, '0')}`;
+  return curYear + '-' + String(curMonth + 1).padStart(2, '0');
 }
 
 function getMonthData() {
-  return LS.get(`smk_month_${monthKey()}`, {
-    schedule: {},
-    bgType: 'color',
-    bgColor: '#FFFFFF',
-    bgCustomUrl: null,
-    bgOpacity: 0,
-    description: '',
+  return LS.get('smk_month_' + monthKey(), {
+    schedule: {}, bgType:'color', bgColor:'#E3F2FD',
+    bgCustomUrl:null, bgOpacity:0, description:'',
   });
 }
 
 function patchMonthData(patch) {
-  const data = getMonthData();
-  LS.set(`smk_month_${monthKey()}`, { ...data, ...patch });
+  var data = getMonthData();
+  Object.assign(data, patch);
+  LS.set('smk_month_' + monthKey(), data);
 }
 
-/* Load current month's data into memory */
 function loadMonth() {
-  const data = getMonthData();
-  schedule = { ...(data.schedule || {}) };
-
-  // Load bg into bgTab (for background tab)
+  var data = getMonthData();
+  schedule = Object.assign({}, data.schedule || {});
   bgTab.type      = data.bgType      || 'color';
-  bgTab.color     = data.bgColor     || '#FFFFFF';
+  bgTab.color     = data.bgColor     || '#E3F2FD';
   bgTab.customUrl = data.bgCustomUrl || null;
   bgTab.opacity   = data.bgOpacity   !== undefined ? data.bgOpacity : 0;
-
-  // Apply bg to calWrap
   applyBgFromState(bgTab);
-
-  // Load description
-  const desc = data.description || '';
-  updateDescExport(desc);
+  setDescValue(data.description || '');
 }
 
-/* ═══════════════════ Init ═══════════════════ */
+/* ═══ Init ═══ */
 function init() {
-  const now = new Date();
+  var now = new Date();
   curYear  = now.getFullYear();
   curMonth = now.getMonth();
-
-  // Restore title
-  const ti = document.getElementById('calTitleInput');
+  var ti = document.getElementById('calTitleInput');
   if (ti) ti.value = calTitle;
-
   renderShifts();
   renderBgTab();
   loadMonth();
   buildCalendar();
 }
 
-/* ═══════════════════ Tabs ═══════════════════ */
+/* ═══ Tabs ═══ */
 function currentTabName() {
-  const active = document.querySelector('.tab.active');
-  return active ? active.dataset.tab : '';
+  var a = document.querySelector('.tab.active');
+  return a ? a.dataset.tab : '';
 }
 
 function switchTab(name) {
-  const prev = currentTabName();
-
-  // Leaving background tab without saving → revert calWrap to saved state
+  var prev = currentTabName();
   if (prev === 'background' && name !== 'background') {
-    const data = getMonthData();
+    var data = getMonthData();
     bgTab.type      = data.bgType      || 'color';
-    bgTab.color     = data.bgColor     || '#FFFFFF';
+    bgTab.color     = data.bgColor     || '#E3F2FD';
     bgTab.customUrl = data.bgCustomUrl || null;
     bgTab.opacity   = data.bgOpacity   !== undefined ? data.bgOpacity : 0;
     applyBgFromState(bgTab);
   }
-
-  // Entering background tab → sync bgTab from saved data & render
   if (name === 'background') {
-    const data = getMonthData();
-    bgTab.type      = data.bgType      || 'color';
-    bgTab.color     = data.bgColor     || '#FFFFFF';
-    bgTab.customUrl = data.bgCustomUrl || null;
-    bgTab.opacity   = data.bgOpacity   !== undefined ? data.bgOpacity : 0;
+    var data2 = getMonthData();
+    bgTab.type      = data2.bgType      || 'color';
+    bgTab.color     = data2.bgColor     || '#E3F2FD';
+    bgTab.customUrl = data2.bgCustomUrl || null;
+    bgTab.opacity   = data2.bgOpacity   !== undefined ? data2.bgOpacity : 0;
     renderBgTab();
     applyBgFromState(bgTab);
   }
-
-  // Show action row only on calendar tab
   document.getElementById('actionRow').style.display = name === 'calendar' ? 'flex' : 'none';
-
-  document.querySelectorAll('.tab').forEach(t =>
-    t.classList.toggle('active', t.dataset.tab === name));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('active', t.dataset.tab === name); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.getElementById('tab-' + name).classList.add('active');
 }
 
-/* ═══════════════════ Title ═══════════════════ */
+/* ═══ Title ═══ */
 function onTitleInput(v) {
   calTitle = v;
   LS.set('smk_title', calTitle);
   document.getElementById('calExportTitle').textContent = v;
 }
 
-/* ═══════════════════ Description ═══════════════════ */
-function updateDescExport(text) {
-  const el = document.getElementById('descExport');
-  if (el.textContent !== text) el.textContent = text;
+/* ═══ Description ═══ */
+function setDescValue(text) {
+  var el  = document.getElementById('descExport');
+  var btn = document.getElementById('descAddBtn');
+  el.textContent = text;
+  var has = text.trim().length > 0;
+  el.classList.toggle('visible', has);
+  btn.style.display = has ? 'none' : 'inline-flex';
+}
+
+function showDesc() {
+  var el  = document.getElementById('descExport');
+  var btn = document.getElementById('descAddBtn');
+  el.classList.add('visible');
+  btn.style.display = 'none';
+  setTimeout(function(){ el.focus(); }, 50);
 }
 
 function onDescInput(el) {
-  const v = el.textContent;
-  patchMonthData({ description: v });
+  patchMonthData({ description: el.textContent });
 }
 
-/* ═══════════════════ Shifts ═══════════════════ */
+function onDescBlur(el) {
+  if (el.textContent.trim() === '') {
+    el.classList.remove('visible');
+    el.textContent = '';
+    document.getElementById('descAddBtn').style.display = 'inline-flex';
+    patchMonthData({ description: '' });
+  }
+}
+
+/* ═══ Shifts ═══ */
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function renderShifts() {
-  const el = document.getElementById('shiftList');
+  var el = document.getElementById('shiftList');
   el.innerHTML = '';
-  shifts.forEach(s => {
-    const card = document.createElement('div');
+  shifts.forEach(function(s) {
+    var card = document.createElement('div');
     card.className = 'shift-card';
-    card.innerHTML = `
-      <div class="shift-card-top">
-        <div class="color-dot" id="dot-${s.id}" style="background:${s.color}">
-          <input type="color" value="${s.color}"
-            oninput="changeColor(${s.id},this.value)"
-            onchange="changeColor(${s.id},this.value)">
-        </div>
-        <input class="shift-name-input" type="text" value="${escHtml(s.name)}" maxlength="8"
-          oninput="renameShift(${s.id},this.value)">
-        <button class="del-btn" onclick="deleteShift(${s.id})">×</button>
-      </div>
-      <div class="shift-card-extra">
-        <div class="time-row">
-          <label>上班</label>
-          <input class="time-input" type="time" value="${s.timeStart}"
-            onchange="changeTime(${s.id},'start',this.value)">
-          <label style="width:16px;text-align:center;color:#ccc">—</label>
-          <label>下班</label>
-          <input class="time-input" type="time" value="${s.timeEnd}"
-            onchange="changeTime(${s.id},'end',this.value)">
-        </div>
-        <div class="toggle-row">
-          <label>在月曆上顯示時間</label>
-          <label class="toggle">
-            <input type="checkbox" ${s.showTime ? 'checked' : ''}
-              onchange="changeShowTime(${s.id},this.checked)">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>`;
+    card.innerHTML =
+      '<div class="shift-card-top">' +
+        '<div class="color-dot" id="dot-' + s.id + '" style="background:' + s.color + '">' +
+          '<input type="color" value="' + s.color + '"' +
+            ' oninput="changeColor(' + s.id + ',this.value)"' +
+            ' onchange="changeColor(' + s.id + ',this.value)">' +
+        '</div>' +
+        '<input class="shift-name-input" type="text" value="' + escHtml(s.name) + '" maxlength="8"' +
+          ' oninput="renameShift(' + s.id + ',this.value)">' +
+        '<button class="del-btn" onclick="deleteShift(' + s.id + ')">&#215;</button>' +
+      '</div>' +
+      '<div class="shift-card-extra">' +
+        '<div class="time-row">' +
+          '<label>上班</label>' +
+          '<input class="time-input" type="time" value="' + s.timeStart + '"' +
+            ' onchange="changeTime(' + s.id + ',\'start\',this.value)">' +
+          '<label style="width:16px;text-align:center;color:#ccc">&#8212;</label>' +
+          '<label>下班</label>' +
+          '<input class="time-input" type="time" value="' + s.timeEnd + '"' +
+            ' onchange="changeTime(' + s.id + ',\'end\',this.value)">' +
+        '</div>' +
+        '<div class="toggle-row">' +
+          '<label>在月曆上顯示時間</label>' +
+          '<label class="toggle">' +
+            '<input type="checkbox" ' + (s.showTime ? 'checked' : '') +
+              ' onchange="changeShowTime(' + s.id + ',this.checked)">' +
+            '<span class="toggle-slider"></span>' +
+          '</label>' +
+        '</div>' +
+      '</div>';
     el.appendChild(card);
   });
   LS.set('smk_shifts', shifts);
 }
 
-function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
 function addShift() {
-  const colors = ['#4CAF8C','#F4A52A','#6B7FD4','#E17A5A','#AA5FD4','#5BB5E0','#E05B9A','#8BC34A'];
+  var colors = ['#4CAF8C','#F4A52A','#6B7FD4','#E17A5A','#AA5FD4','#5BB5E0','#E05B9A','#8BC34A'];
   shifts.push({ id:idCounter, name:'新班別', color:colors[idCounter % colors.length],
     timeStart:'', timeEnd:'', showTime:false });
   idCounter++;
@@ -459,32 +442,32 @@ function addShift() {
 }
 
 function deleteShift(id) {
-  shifts = shifts.filter(s => s.id !== id);
-  Object.keys(schedule).forEach(k => { if (schedule[k] === id) delete schedule[k]; });
+  shifts = shifts.filter(function(s){ return s.id !== id; });
+  Object.keys(schedule).forEach(function(k){ if (schedule[k] === id) delete schedule[k]; });
   renderShifts();
-  patchMonthData({ schedule: { ...schedule } });
+  patchMonthData({ schedule: Object.assign({}, schedule) });
   buildCalendar();
 }
 
 function renameShift(id, name) {
-  const s = shifts.find(s => s.id === id);
+  var s = shifts.find(function(s){ return s.id === id; });
   if (s) s.name = name;
   LS.set('smk_shifts', shifts);
   buildCalendar();
 }
 
 function changeColor(id, color) {
-  const s = shifts.find(s => s.id === id);
+  var s = shifts.find(function(s){ return s.id === id; });
   if (!s) return;
   s.color = color;
-  const dot = document.getElementById('dot-' + id);
+  var dot = document.getElementById('dot-' + id);
   if (dot) dot.style.background = color;
   LS.set('smk_shifts', shifts);
   buildCalendar();
 }
 
 function changeTime(id, which, val) {
-  const s = shifts.find(s => s.id === id);
+  var s = shifts.find(function(s){ return s.id === id; });
   if (!s) return;
   if (which === 'start') s.timeStart = val; else s.timeEnd = val;
   LS.set('smk_shifts', shifts);
@@ -492,68 +475,63 @@ function changeTime(id, which, val) {
 }
 
 function changeShowTime(id, checked) {
-  const s = shifts.find(s => s.id === id);
+  var s = shifts.find(function(s){ return s.id === id; });
   if (s) s.showTime = checked;
   LS.set('smk_shifts', shifts);
   buildCalendar();
 }
 
-/* ═══════════════════ Background ═══════════════════ */
+/* ═══ Background ═══ */
 function applyBgFromState(state) {
-  const bgEl      = document.getElementById('calBg');
-  const overlayEl = document.getElementById('calOverlay');
-  const opacity   = state.opacity !== undefined ? state.opacity : 0;
+  var bgEl      = document.getElementById('calBg');
+  var overlayEl = document.getElementById('calOverlay');
+  var opacity   = state.opacity !== undefined ? state.opacity : 0;
 
   if (state.type === 'custom' && state.customUrl) {
-    bgEl.style.background      = '';
-    bgEl.style.backgroundImage = `url(${state.customUrl})`;
-    bgEl.style.backgroundSize  = 'cover';
+    bgEl.style.background         = '';
+    bgEl.style.backgroundImage    = 'url(' + state.customUrl + ')';
+    bgEl.style.backgroundSize     = 'cover';
     bgEl.style.backgroundPosition = 'center';
   } else {
-    // Solid color
     bgEl.style.backgroundImage = 'none';
-    bgEl.style.background      = state.color || '#FFFFFF';
+    bgEl.style.background      = state.color || '#E3F2FD';
   }
-
-  overlayEl.style.background = opacity > 0
-    ? `rgba(255,255,255,${opacity})`
-    : 'none';
+  overlayEl.style.background = opacity > 0 ? 'rgba(255,255,255,' + opacity + ')' : 'none';
 }
 
 function renderBgTab() {
-  // Color swatches
-  const grid = document.getElementById('colorSwatchGrid');
+  var grid = document.getElementById('colorSwatchGrid');
   grid.innerHTML = '';
 
-  PRESET_COLORS.forEach(color => {
-    const div = document.createElement('div');
-    const isActive = bgTab.type === 'color' && bgTab.color === color;
+  PRESET_COLORS.forEach(function(color) {
+    var div = document.createElement('div');
+    var isActive = bgTab.type === 'color' && bgTab.color === color;
     div.className = 'color-swatch' + (isActive ? ' active' : '');
     div.style.background = color;
     if (color === '#FFFFFF') div.style.boxShadow = 'inset 0 0 0 1px #ddd';
-    div.onclick = () => { bgTab.type = 'color'; bgTab.color = color; renderBgTab(); applyBgFromState(bgTab); };
+    div.onclick = (function(c){ return function(){
+      bgTab.type = 'color'; bgTab.color = c; renderBgTab(); applyBgFromState(bgTab);
+    }; })(color);
     grid.appendChild(div);
   });
 
-  // Custom color picker swatch (palette icon)
-  const paletteDiv = document.createElement('div');
-  const isPaletteActive = bgTab.type === 'color' && !PRESET_COLORS.includes(bgTab.color);
+  /* Custom color picker swatch */
+  var paletteDiv = document.createElement('div');
+  var isPaletteActive = bgTab.type === 'color' && PRESET_COLORS.indexOf(bgTab.color) === -1;
   paletteDiv.className = 'color-swatch palette-swatch' + (isPaletteActive ? ' active' : '');
   paletteDiv.title = '自訂顏色';
-  const colorInput = document.createElement('input');
+  var colorInput = document.createElement('input');
   colorInput.type = 'color';
-  colorInput.value = isPaletteActive ? bgTab.color : '#aaaaaa';
-  colorInput.addEventListener('input', e => {
-    bgTab.type  = 'color';
-    bgTab.color = e.target.value;
-    renderBgTab();
-    applyBgFromState(bgTab);
+  colorInput.value = isPaletteActive ? bgTab.color : '#888888';
+  colorInput.addEventListener('input', function(e) {
+    bgTab.type = 'color'; bgTab.color = e.target.value;
+    renderBgTab(); applyBgFromState(bgTab);
   });
   paletteDiv.appendChild(colorInput);
   grid.appendChild(paletteDiv);
 
-  // Custom image thumbnail
-  const thumb = document.getElementById('customImgThumb');
+  /* Custom image thumbnail */
+  var thumb = document.getElementById('customImgThumb');
   if (bgTab.customUrl) {
     thumb.src = bgTab.customUrl;
     thumb.style.display = 'block';
@@ -563,8 +541,7 @@ function renderBgTab() {
     thumb.classList.remove('active');
   }
 
-  // Opacity slider
-  const pct = Math.round(bgTab.opacity * 100);
+  var pct = Math.round(bgTab.opacity * 100);
   document.getElementById('bgOpacityRange').value = pct;
   document.getElementById('opacityVal').textContent = pct + '%';
 }
@@ -572,22 +549,19 @@ function renderBgTab() {
 function selectCustomImg() {
   if (!bgTab.customUrl) return;
   bgTab.type = 'custom';
-  renderBgTab();
-  applyBgFromState(bgTab);
+  renderBgTab(); applyBgFromState(bgTab);
 }
 
 function uploadBg(e) {
-  const file = e.target.files[0];
+  var file = e.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
+  var reader = new FileReader();
+  reader.onload = function(ev) {
     bgTab.customUrl = ev.target.result;
     bgTab.type      = 'custom';
-    renderBgTab();
-    applyBgFromState(bgTab);
+    renderBgTab(); applyBgFromState(bgTab);
   };
   reader.readAsDataURL(file);
-  // Reset input so same file can be re-selected
   e.target.value = '';
 }
 
@@ -599,276 +573,230 @@ function onOpacityInput(v) {
 
 function saveBg() {
   patchMonthData({
-    bgType:      bgTab.type,
-    bgColor:     bgTab.color,
-    bgCustomUrl: bgTab.customUrl,
-    bgOpacity:   bgTab.opacity,
+    bgType:bgTab.type, bgColor:bgTab.color,
+    bgCustomUrl:bgTab.customUrl, bgOpacity:bgTab.opacity,
   });
-  showToast('✅ 背景已儲存！');
+  showToast('背景已儲存！');
 }
 
-/* ═══════════════════ Calendar ═══════════════════ */
+/* ═══ Calendar ═══ */
 function buildCalendar() {
-  const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-  const labelStr = `${curYear} 年 ${MONTHS[curMonth]}`;
-  document.getElementById('monthLabel').textContent     = labelStr;
-  document.getElementById('calExportMonth').textContent = labelStr;
+  var MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  var lbl = curYear + ' 年 ' + MONTHS[curMonth];
+  document.getElementById('monthLabel').textContent     = lbl;
+  document.getElementById('calExportMonth').textContent = lbl;
   document.getElementById('calExportTitle').textContent = calTitle;
 
-  const today = new Date();
-  const grid  = document.getElementById('calGrid');
+  var today = new Date();
+  var grid  = document.getElementById('calGrid');
   grid.innerHTML = '';
 
-  const dayNames = [{l:'日',c:'sun'},{l:'一',c:''},{l:'二',c:''},{l:'三',c:''},
-                    {l:'四',c:''},{l:'五',c:''},{l:'六',c:'sat'}];
-  dayNames.forEach(d => {
-    const h = document.createElement('div');
+  var dayNames = [{l:'日',c:'sun'},{l:'一',c:''},{l:'二',c:''},{l:'三',c:''},
+                  {l:'四',c:''},{l:'五',c:''},{l:'六',c:'sat'}];
+  dayNames.forEach(function(d) {
+    var h = document.createElement('div');
     h.className = 'day-header ' + d.c;
     h.textContent = d.l;
     grid.appendChild(h);
   });
 
-  const firstDay    = new Date(curYear, curMonth, 1).getDay();
-  const daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
+  var firstDay    = new Date(curYear, curMonth, 1).getDay();
+  var daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
 
-  for (let i = 0; i < firstDay; i++) {
-    const e = document.createElement('div');
-    e.className = 'day-cell empty';
-    grid.appendChild(e);
+  for (var i = 0; i < firstDay; i++) {
+    var e = document.createElement('div'); e.className = 'day-cell empty'; grid.appendChild(e);
   }
 
-  for (let d = 1; d <= daysInMonth; d++) {
-    const cell   = document.createElement('div');
+  for (var d = 1; d <= daysInMonth; d++) {
+    var cell  = document.createElement('div');
     cell.className = 'day-cell';
-    const key    = `${curYear}-${curMonth}-${d}`;
-    const shiftId = schedule[key];
-    const shift  = shiftId !== undefined ? shifts.find(s => s.id === shiftId) : null;
-    const dow    = new Date(curYear, curMonth, d).getDay();
-    const isToday = today.getFullYear() === curYear && today.getMonth() === curMonth && today.getDate() === d;
+    var key   = curYear + '-' + curMonth + '-' + d;
+    var sid   = schedule[key];
+    var shift = sid !== undefined ? shifts.find(function(s){ return s.id === sid; }) : null;
+    var dow   = new Date(curYear, curMonth, d).getDay();
+    var isTod = today.getFullYear()===curYear && today.getMonth()===curMonth && today.getDate()===d;
 
     if (shift) {
       cell.style.background  = shift.color + '30';
       cell.style.borderColor = shift.color + '70';
     }
 
-    const numCls = 'day-num' + (dow === 0 ? ' sun' : dow === 6 ? ' sat' : '');
-    let inner = isToday
-      ? `<div class="day-num today">${d}</div>`
-      : `<div class="${numCls}">${d}</div>`;
+    var nc = 'day-num' + (dow===0?' sun':dow===6?' sat':'');
+    var inner = isTod ? '<div class="day-num today">' + d + '</div>' : '<div class="' + nc + '">' + d + '</div>';
 
     if (shift) {
-      inner += `<span class="shift-badge" style="background:${shift.color}">${escHtml(shift.name)}</span>`;
+      inner += '<span class="shift-badge" style="background:' + shift.color + '">' + escHtml(shift.name) + '</span>';
       if (shift.showTime && (shift.timeStart || shift.timeEnd)) {
-        const t = [shift.timeStart, shift.timeEnd].filter(Boolean).join('-');
-        inner += `<span class="shift-time" style="color:${shift.color}cc">${t}</span>`;
+        var t = [shift.timeStart, shift.timeEnd].filter(Boolean).join('-');
+        inner += '<span class="shift-time" style="color:' + shift.color + 'cc">' + t + '</span>';
       }
     }
 
     cell.innerHTML = inner;
-    cell.addEventListener('click', () => openPicker(key));
+    (function(k){ cell.addEventListener('click', function(){ openPicker(k); }); })(key);
     grid.appendChild(cell);
   }
 
   renderLegend();
-  // Re-apply saved bg for this month
   applyBgFromState(bgTab);
 }
 
 function changeMonth(delta) {
-  // Save current schedule before switching
-  patchMonthData({ schedule: { ...schedule } });
-
+  patchMonthData({ schedule: Object.assign({}, schedule) });
   curMonth += delta;
   if (curMonth < 0)  { curMonth = 11; curYear--; }
   if (curMonth > 11) { curMonth = 0;  curYear++; }
-
-  // Load new month
   loadMonth();
   buildCalendar();
 }
 
 function renderLegend() {
-  const leg  = document.getElementById('legend');
+  var leg = document.getElementById('legend');
   leg.innerHTML = '';
-  const used = new Set(Object.values(schedule));
-  shifts.forEach(s => {
-    if (!used.has(s.id)) return;
-    const item = document.createElement('div');
+  var used = {};
+  Object.values(schedule).forEach(function(v){ used[v] = true; });
+  shifts.forEach(function(s) {
+    if (!used[s.id]) return;
+    var item = document.createElement('div');
     item.className = 'legend-item';
-    let txt = s.name;
+    var txt = s.name;
     if (s.timeStart || s.timeEnd) txt += ' ' + [s.timeStart, s.timeEnd].filter(Boolean).join('-');
-    item.innerHTML = `<span class="legend-dot" style="background:${s.color}"></span><span>${escHtml(txt)}</span>`;
+    item.innerHTML = '<span class="legend-dot" style="background:' + s.color + '"></span><span>' + escHtml(txt) + '</span>';
     leg.appendChild(item);
   });
 }
 
-/* ═══════════════════ Shift picker ═══════════════════ */
+/* ═══ Shift picker ═══ */
 function openPicker(key) {
-  const items = document.getElementById('sheetItems');
+  var items = document.getElementById('sheetItems');
   items.innerHTML = '';
-
-  const clear = document.createElement('div');
+  var clear = document.createElement('div');
   clear.className = 'sheet-clear';
-  clear.innerHTML = `<span class="sheet-dot" style="background:#ddd"></span><span>清除</span>`;
-  clear.onclick = () => {
+  clear.innerHTML = '<span class="sheet-dot" style="background:#ddd"></span><span>清除</span>';
+  clear.onclick = function() {
     delete schedule[key];
-    patchMonthData({ schedule: { ...schedule } });
+    patchMonthData({ schedule: Object.assign({}, schedule) });
     closeSheet(); buildCalendar();
   };
   items.appendChild(clear);
-  items.appendChild(mkDivider());
+  items.appendChild(mkDiv());
 
-  shifts.forEach(s => {
-    const item = document.createElement('div');
+  shifts.forEach(function(s) {
+    var item = document.createElement('div');
     item.className = 'sheet-item';
-    const selected = schedule[key] === s.id;
-    let timeStr = '';
-    if (s.timeStart || s.timeEnd) timeStr = [s.timeStart, s.timeEnd].filter(Boolean).join('-');
-    item.innerHTML = `
-      <span class="sheet-dot" style="background:${s.color}"></span>
-      <span class="sheet-item-name">${escHtml(s.name)}</span>
-      ${timeStr ? `<span class="sheet-item-time">${timeStr}</span>` : ''}
-      ${selected ? '<span style="margin-left:auto;color:#06C755;font-size:18px">✓</span>' : ''}`;
-    item.onclick = () => {
-      schedule[key] = s.id;
-      patchMonthData({ schedule: { ...schedule } });
+    var sel = schedule[key] === s.id;
+    var t   = (s.timeStart || s.timeEnd) ? [s.timeStart, s.timeEnd].filter(Boolean).join('-') : '';
+    item.innerHTML =
+      '<span class="sheet-dot" style="background:' + s.color + '"></span>' +
+      '<span class="sheet-item-name">' + escHtml(s.name) + '</span>' +
+      (t ? '<span class="sheet-item-time">' + t + '</span>' : '') +
+      (sel ? '<span style="margin-left:auto;color:#06C755;font-size:18px">&#10003;</span>' : '');
+    (function(sid){ item.onclick = function() {
+      schedule[key] = sid;
+      patchMonthData({ schedule: Object.assign({}, schedule) });
       closeSheet(); buildCalendar();
-    };
+    }; })(s.id);
     items.appendChild(item);
-    items.appendChild(mkDivider());
+    items.appendChild(mkDiv());
   });
 
   document.getElementById('sheetOverlay').classList.add('open');
   document.getElementById('pickerSheet').classList.add('open');
 }
 
-function mkDivider() {
-  const d = document.createElement('div');
-  d.className = 'sheet-divider';
-  return d;
+function mkDiv() {
+  var d = document.createElement('div'); d.className = 'sheet-divider'; return d;
 }
-
 function closeSheet() {
   document.getElementById('sheetOverlay').classList.remove('open');
   document.getElementById('pickerSheet').classList.remove('open');
 }
 
-/* ═══════════════════ Export ═══════════════════ */
-async function getCanvas() {
+/* ═══ Export (canvas) ═══ */
+function getCanvas() {
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
   showLoading('產生圖片中...');
-  try {
-    const el   = document.getElementById('calWrap');
-    const bgEl = document.getElementById('calBg');
-
-    // If using a custom image (data URL), no CORS issue; just render
-    // If using a solid color, no image needed
-    const canvas = await html2canvas(el, {
-      scale: 2.5,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#ffffff',
-      logging: false,
-      imageTimeout: 15000,
-    });
-
-    return canvas;
-  } finally {
-    hideLoading();
-  }
+  return html2canvas(document.getElementById('calWrap'), {
+    scale:2.5, useCORS:true, allowTaint:true,
+    backgroundColor:'#ffffff', logging:false, imageTimeout:15000,
+  }).then(function(canvas) {
+    hideLoading(); return canvas;
+  }).catch(function(e) {
+    hideLoading(); throw e;
+  });
 }
 
-async function downloadImg() {
-  try {
-    const canvas = await getCanvas();
-    const fname  = (calTitle || '班表') + '.png';
-    const link   = document.createElement('a');
-    link.download = fname;
-    link.href     = canvas.toDataURL('image/png');
-    link.click();
-    showToast('✅ 下載成功！');
-  } catch(e) {
-    console.error(e);
-    showToast('下載失敗，請再試一次');
-  }
-}
-
-/* ═══════════════════ Share ═══════════════════ */
-function openShare() {
-  document.getElementById('shareOverlay').classList.add('open');
-  document.getElementById('shareSheet').classList.add('open');
-}
-function closeShareSheet() {
-  document.getElementById('shareOverlay').classList.remove('open');
-  document.getElementById('shareSheet').classList.remove('open');
-}
-
-async function shareTo(type) {
-  closeShareSheet();
-  let canvas;
-  try { canvas = await getCanvas(); }
-  catch(e) { showToast('圖片產生失敗'); return; }
-
-  const fname = (calTitle || '班表') + '.png';
-
-  if (type === 'native') {
-    canvas.toBlob(async blob => {
-      const file = new File([blob], fname, { type:'image/png' });
-      if (navigator.share && navigator.canShare?.({ files:[file] })) {
-        try {
-          await navigator.share({ files:[file], title: calTitle || '班表' });
-          showToast('分享成功！');
-        } catch(e) {
+/* ═══ Download ═══ */
+function downloadImg() {
+  getCanvas().then(function(canvas) {
+    var fname = (calTitle || '班表') + '.png';
+    canvas.toBlob(function(blob) {
+      var file = new File([blob], fname, { type:'image/png' });
+      /* Web Share API — on iOS triggers system share sheet with "Save Image" option */
+      if (navigator.share && navigator.canShare && navigator.canShare({ files:[file] })) {
+        navigator.share({ files:[file], title:fname }).then(function() {
+          showToast('圖片已儲存！');
+        }).catch(function(e) {
           if (e.name !== 'AbortError') {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.download = fname; a.href = url; a.click();
-            URL.revokeObjectURL(url);
+            /* fallback: link download */
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.download = fname; a.href = url; a.click();
+            setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
+            showToast('下載成功！');
+          }
+        });
+      } else {
+        /* Desktop: direct download */
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a'); a.download = fname; a.href = url; a.click();
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
+        showToast('下載成功！');
+      }
+    });
+  }).catch(function() { showToast('下載失敗，請再試一次'); });
+}
+
+/* ═══ Share directly (no sheet) ═══ */
+function shareImg() {
+  getCanvas().then(function(canvas) {
+    var fname = (calTitle || '班表') + '.png';
+    canvas.toBlob(function(blob) {
+      var file = new File([blob], fname, { type:'image/png' });
+      if (navigator.share && navigator.canShare && navigator.canShare({ files:[file] })) {
+        navigator.share({ files:[file], title: calTitle || '班表' }).then(function() {
+          showToast('分享成功！');
+        }).catch(function(e) {
+          if (e.name !== 'AbortError') {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.download = fname; a.href = url; a.click();
+            setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
             showToast('已下載，請手動傳送至 LINE');
           }
-        }
+        });
       } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.download = fname; a.href = url; a.click();
-        URL.revokeObjectURL(url);
-        showToast('已下載，請手動傳送');
+        /* Fallback: open in new tab, user can long-press to save/share */
+        var url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 30000);
+        showToast('請長按圖片後分享至 LINE');
       }
     });
-  } else if (type === 'copy') {
-    canvas.toBlob(async blob => {
-      try {
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        showToast('✅ 圖片已複製到剪貼簿！');
-      } catch(e) {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.download = fname; a.href = url; a.click();
-        URL.revokeObjectURL(url);
-        showToast('已下載（瀏覽器不支援直接複製）');
-      }
-    });
-  } else if (type === 'email') {
-    canvas.toBlob(blob => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.download = fname; a.href = url; a.click();
-      URL.revokeObjectURL(url);
-      setTimeout(() => {
-        window.location.href = `mailto:?subject=${encodeURIComponent(calTitle || '班表')}&body=${encodeURIComponent('請查收班表圖片（已下載於您的裝置）。')}`;
-      }, 600);
-    });
-  }
+  }).catch(function() { showToast('圖片產生失敗'); });
 }
 
-/* ═══════════════════ UI helpers ═══════════════════ */
+/* ═══ UI helpers ═══ */
 function showLoading(msg) {
   document.getElementById('loadingMsg').textContent = msg || '處理中...';
   document.getElementById('loading').classList.add('show');
 }
 function hideLoading() { document.getElementById('loading').classList.remove('show'); }
 function showToast(msg) {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+  setTimeout(function(){ t.classList.remove('show'); }, 2800);
 }
 
-/* ═══════════════════ Start ═══════════════════ */
+/* ═══ Start ═══ */
 init();
 </script>
 </body>
